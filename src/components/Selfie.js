@@ -105,18 +105,18 @@ export default class Selfie extends React.Component {
   }
 
   takePicture = async function() {
-    console.log('here');
     const { currentUser} = firebase.auth();
-    console.log('here', currentUser);
     if (this.camera) {
       this.camera.takePictureAsync().then(data => {
-        console.log(data);
-        firebase.database().ref(`/users/${currentUser.uid}/pics`)
-        .push({pic: data.uri, rating: null})
+        FileSystem.readAsStringAsync(data.uri)
+        .then(string => {
+          firebase.database().ref(`/users/${currentUser.uid}/pics`)
+           .push({pic: string, rating: null})
+        });
 
+        //actual picture??
         Actions.voting();
 
-        FileSystem.readAsStringAsync(data.uri);
 
         FileSystem.moveAsync({
           from: data.uri,

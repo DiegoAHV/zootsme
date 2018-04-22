@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 // esto es pq JSX usa React. blah blah para traducir
 //las etiketas de los componennts
 import { View, Text, Image } from 'react-native';
-import axios from 'axios';
 import CardSection from './CardSection'
 
 const Card = (props) => {
