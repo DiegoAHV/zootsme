@@ -114,6 +114,7 @@ export default class Selfie extends React.Component {
         firebase.database().ref(`/users/${currentUser.uid}/pics`)
         .push({pic: data.uri, rating: null})
 
+        Actions.voting();
 
         FileSystem.readAsStringAsync(data.uri);
 
@@ -128,7 +129,6 @@ export default class Selfie extends React.Component {
         });
       });
     }
-    Actions.voting();
   };
 
   onFacesDetected = ({ faces }) => this.setState({ faces });
