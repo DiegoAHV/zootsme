@@ -13,7 +13,13 @@ const ResultsScreen = () => {
       />
     </CardSection>
     <CardSection>
-      <Text>Chart, Pie here</Text>
+      <Image
+        style={styles.chartStyle}
+        source={ require('../config/pie_chart.jpg') }
+      />
+    </CardSection>
+    <CardSection>
+      <Text>25% of the voters are dead by now...</Text>
     </CardSection>
   </Card>
   )
@@ -23,6 +29,10 @@ const styles = {
     height: 400,
     width: null,
     flex: 1
+  },
+  chartStyle: {
+    height: 100,
+
   }
 }
 
