@@ -3,6 +3,7 @@ import {View, Text, Image , Linking} from 'react-native';
 import {Card, CardSection, Button} from './common';
 import axios from 'axios';
 import firebase from 'firebase'
+import { Actions } from 'react-native-router-flux';
 
 class VotingScreen extends Component {
   constructor(props) {
@@ -15,7 +16,9 @@ class VotingScreen extends Component {
     const storage = firebase.storage();
 
     const norris = storage.ref(`elbuenodeChuck.jpg`)
-      norris.getDownloadURL().then(url=> this.setState({pic: url}))
+      norris.getDownloadURL().then(url=> this.setState({pic: url}));
+
+  const timeout = setTimeout(()=> Actions.results());
 
   }
 

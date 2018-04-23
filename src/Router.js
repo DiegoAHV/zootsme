@@ -3,6 +3,7 @@ import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import VotingScreen from './components/VotingScreen';
 import TaggingScreen from './components/TaggingScreen';
+import ResultsScreen from './components/ResultsScreen';
 import Selfie from './components/Selfie'
 
 const RouterComponent = () => {
@@ -22,7 +23,7 @@ const RouterComponent = () => {
           <Scene key="selfie" component={Selfie} title="Take a selfie..." />
           <Scene key="voting" initial component={VotingScreen} title="Voting..." />
           <Scene key="tagging" component={TaggingScreen} title="Tag your selfie..."/>
-          {/* <Scene key="results" component={ResultsScreen} title="Your results" /> */}
+          <Scene key="results" component={ResultsScreen} title="Your results" />
         </Scene>
       </Scene>
     </Router>
