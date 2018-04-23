@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image , Linking} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import {Card, CardSection, Button} from './common';
 import axios from 'axios';
 import firebase from 'firebase'
@@ -18,7 +18,7 @@ class VotingScreen extends Component {
     const norris = storage.ref(`elbuenodeChuck.jpg`)
       norris.getDownloadURL().then(url=> this.setState({pic: url}));
 
-  const timeout = setTimeout(()=> Actions.results());
+  const timeout = setTimeout(()=> Actions.results(), 30000);
 
   }
 
@@ -52,8 +52,10 @@ class VotingScreen extends Component {
           </Button>
           <Button onPress={ () => {
             firebase.storage().ref('mr-t.png').getDownloadURL().then(url=> this.setState({pic: url}))
-          }
-
+            firebase.storage().ref('hannibal.jpg').getDownloadURL().then(url=> this.setState({pic: url}))
+            firebase.storage().ref('Murdock.jpg').getDownloadURL().then(url=> this.setState({pic: url}))
+            firebase.storage().ref('phoenix.jpg').getDownloadURL().then(url=> this.setState({pic: url}))
+            }
           }>
             NO
           </Button>
