@@ -106,12 +106,21 @@ export default class Selfie extends React.Component {
 
   takePicture = async function() {
     const { currentUser} = firebase.auth();
+    const storageRef = firebase.storage().ref(`${currentUser}`);
+
     if (this.camera) {
       this.camera.takePictureAsync().then(data => {
+        // console.log(data.uri);
+
+        // const pic2Storage = new File([data.uri], 'selfie.jpg');
+        // selfieRef.put(pic2Storage).then(snpashot => console.log('File uploaded')
+        // )
+
         FileSystem.readAsStringAsync(data.uri)
         .then(string => {
-          firebase.database().ref(`/users/${currentUser.uid}/pics`)
-           .push({pic: string, rating: null})
+          firebase.storage().ref(`/users/${currentUser.uid}`)
+           .putString(string, 'base64').then(snpashot => console.log('File uploaded')
+           )
         });
 
         //actual picture??

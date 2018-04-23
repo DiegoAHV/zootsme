@@ -11,20 +11,12 @@ class VotingScreen extends Component {
   }
 
   componentWillMount() {
-    //fetch and do logic to find the recent ones
-
-    // axios.get('https://rallycoding.herokuapp.com/api/music_albums')
-    // .then( response => this.setState({ pic: 'http://www.royalfashionist.com/wp-content/uploads/2014/12/kate-upton.jpg'}));
     const { currentUser} = firebase.auth();
+    const storage = firebase.storage();
 
-    firebase.database().ref(`/users/${currentUser.uid}/pics`)
-      .on('value', snapshot => {
-        const snapshotValue = snapshot.val();
-        console.log('######SNAPSHOT VALUE@@@@@',snapshotValue);
-        const base64Image = `data:png;base64,${snapshotValue}`;
+    const norris = storage.ref(`elbuenodeChuck.jpg`)
+      norris.getDownloadURL().then(url=> this.setState({pic: url}))
 
-        this.setState({pic: base64Image})
-      })
   }
 
   render() {
@@ -34,15 +26,32 @@ class VotingScreen extends Component {
         <CardSection>
           <Image
             style={styles.imageStyle}
-            source={{uri:this.state.pic}}
+            source={{uri: this.state.pic}}
           />
         </CardSection>
 
         <CardSection>
-          <Button onPress={() => Linking.openURL('http://www.mundodeportivo.com')}>
+          <Button onPress={() => {
+            firebase.storage().ref('elbuenodeChuck.jpg').getMetadata().then(metadata => {
+              let newCounter = metadata.counter++;
+              let newLikes = metadata.likes++;
+            const newMetadata = {
+              counter: newCounter,
+              likes: newLikes
+            }
+            firebase.storage().ref('elbuenodeChuck.jpg').updateMetadata(newMetadata)
+            .catch(error => 'We need to talk... something happended')
+            })
+          }}
+
+          >
             YES
           </Button>
-          <Button>
+          <Button onPress={ () => {
+            firebase.storage().ref('mr-t.png').getDownloadURL().then(url=> this.setState({pic: url}))
+          }
+
+          }>
             NO
           </Button>
         </CardSection>
