@@ -105,38 +105,34 @@ export default class Selfie extends React.Component {
   }
 
   takePicture = async function() {
-    const { currentUser} = firebase.auth();
-    const storageRef = firebase.storage().ref(`${currentUser}`);
+    const { currentUser } = firebase.auth();
 
     if (this.camera) {
-      this.camera.takePictureAsync().then(data => {
-        // console.log(data.uri);
 
-        // const pic2Storage = new File([data.uri], 'selfie.jpg');
-        // selfieRef.put(pic2Storage).then(snpashot => console.log('File uploaded')
-        // )
+      this.camera.takePictureAsync({base64:true})
+        .then(data => {
+          const message = data.base64;
+          // console.log(message);
+          const picsRef = firebase.storage().ref(`${currentUser.uid}/pic2.jpg`);
 
-        FileSystem.readAsStringAsync(data.uri)
-        .then(string => {
-          firebase.storage().ref(`/users/${currentUser.uid}`)
-           .putString(string, 'base64').then(snpashot => console.log('File uploaded')
-           )
-        });
+          // picsRef.putString('pesaddilla')
+          picsRef.putString(message)
+          .then(snapshot=> console.log('uploaded a raw string'))
+          .catch(error => console.log(`ERROR`, error))
 
-        //actual picture??
-        Actions.voting();
-
+            Vibration.vibrate();
+            Actions.voting();
+        })
 
         FileSystem.moveAsync({
           from: data.uri,
           to: `${FileSystem.documentDirectory}photos/Photo_${this.state.photoId}.jpg`,
-        }).then(() => {
+        })
+        .then(() => {
           this.setState({
             photoId: this.state.photoId + 1,
           });
-          Vibration.vibrate();
         });
-      });
     }
   };
 
