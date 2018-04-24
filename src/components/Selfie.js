@@ -104,35 +104,40 @@ export default class Selfie extends React.Component {
     });
   }
 
+
+
   takePicture = async function() {
-    const { currentUser } = firebase.auth();
 
     if (this.camera) {
+      const { currentUser } = firebase.auth();
+      const ref = firebase.storage().ref();
+      const imgRef = ref.child('test.jpg');
+      console.log('name', imgRef.name)
 
       this.camera.takePictureAsync({base64:true})
-        .then(data => {
-          const message = data.base64;
-          // console.log(message);
-          const picsRef = firebase.storage().ref(`${currentUser.uid}/pic2.jpg`);
-
-          // picsRef.putString('pesaddilla')
-          picsRef.putString(message)
+      .then(data => {
+        // let message = data.base64.replace(/\//g, '+');
+        // message = 'data:text/plain;base64,' + message;
+        message = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
+        console.log(message.substring(0,100));
+        imgRef.putString(message, 'base64')
           .then(snapshot=> console.log('uploaded a raw string'))
           .catch(error => console.log(`ERROR`, error))
 
-            Vibration.vibrate();
-            Actions.voting();
-        })
+            // Vibration.vibrate();
+            // Actions.voting();
+      })
+      .catch(error => console.log('picture didn\'t work', error))
 
-        FileSystem.moveAsync({
-          from: data.uri,
-          to: `${FileSystem.documentDirectory}photos/Photo_${this.state.photoId}.jpg`,
-        })
-        .then(() => {
-          this.setState({
-            photoId: this.state.photoId + 1,
-          });
-        });
+        // FileSystem.moveAsync({
+        //   from: data.uri,
+        //   to: `${FileSystem.documentDirectory}photos/Photo_${this.state.photoId}.jpg`,
+        // })
+        // .then(() => {
+        //   this.setState({
+        //     photoId: this.state.photoId + 1,
+        //   });
+        // });
     }
   };
 
