@@ -1,9 +1,10 @@
 import { Constants, Camera, FileSystem, Permissions } from 'expo';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration } from 'react-native';
+// import GalleryScreen from './GalleryScreen';
+// import isIPhoneX from 'react-native-is-iphonex';
+import {Actions} from 'react-native-router-flux'
 import firebase from 'firebase';
-import { Actions } from 'react-native-router-flux'
-
 
 const landmarkSize = 2;
 
@@ -29,7 +30,7 @@ export default class Selfie extends React.Component {
     zoom: 0,
     autoFocus: 'on',
     depth: 0,
-    type: 'front',
+    type: 'back',
     whiteBalance: 'auto',
     ratio: '16:9',
     ratios: [],
@@ -43,6 +44,12 @@ export default class Selfie extends React.Component {
   async componentWillMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ permissionsGranted: status === 'granted' });
+  }
+
+  componentDidMount() {
+    FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'photos').catch(e => {
+      console.log(e, 'Directory exists');
+    });
   }
 
   getRatios = async () => {
@@ -104,45 +111,37 @@ export default class Selfie extends React.Component {
     });
   }
 
-
-
   takePicture = async function() {
-
     if (this.camera) {
-      const { currentUser } = firebase.auth();
-      const ref = firebase.storage().ref();
-      const imgRef = ref.child('test.jpg');
-      console.log('name', imgRef.name)
-
-      this.camera.takePictureAsync({base64:true})
+      this.camera.takePictureAsync({base64: true})
       .then(data => {
-        // let message = data.base64.replace(/\//g, '+');
-        // message = 'data:text/plain;base64,' + message;
-        message = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
-        console.log(message.substring(0,100));
-        imgRef.putString(message, 'base64')
-          .then(snapshot=> console.log('uploaded a raw string'))
-          .catch(error => console.log(`ERROR`, error))
+        console.log('INSIDE THE TAKEPIC');
 
-            // Vibration.vibrate();
-            // Actions.voting();
+        return fetch(data.uri);
       })
-      .catch(error => console.log('picture didn\'t work', error))
-
-        // FileSystem.moveAsync({
-        //   from: data.uri,
-        //   to: `${FileSystem.documentDirectory}photos/Photo_${this.state.photoId}.jpg`,
-        // })
-        // .then(() => {
-        //   this.setState({
-        //     photoId: this.state.photoId + 1,
-        //   });
-        // });
+      .then(response => response.blob())
+      .then(blob => {
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child('arol.jpg');
+        return fileRef.put(blob, {
+          contentType: 'image/jpeg'
+        })
+      })
+      .then(snapshot => {
+        console.log('File uploaded', snapshot);
+      })
+      .catch(error => console.log('Got an error', error))
+      Vibration.vibrate();
+      Actions.voting();
     }
   };
 
   onFacesDetected = ({ faces }) => this.setState({ faces });
   onFaceDetectionError = state => console.warn('Faces detection error:', state);
+
+  renderGallery() {
+    return <GalleryScreen onPress={this.toggleView.bind(this)} />;
+  }
 
   renderFace({ bounds, faceID, rollAngle, yawAngle }) {
     return (
@@ -280,7 +279,7 @@ export default class Selfie extends React.Component {
         <View
           style={{
             flex: 0.1,
-            paddingBottom: 0,
+            paddingBottom:  0,
             backgroundColor: 'transparent',
             flexDirection: 'row',
             alignSelf: 'flex-end',

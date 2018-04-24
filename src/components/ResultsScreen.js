@@ -31,8 +31,10 @@ const styles = {
     flex: 1
   },
   chartStyle: {
-    height: 100,
-
+    height: 50,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }
 

@@ -35,16 +35,20 @@ class VotingScreen extends Component {
 
         <CardSection>
           <Button onPress={() => {
-            firebase.storage().ref('elbuenodeChuck.jpg').getMetadata().then(metadata => {
-              let newCounter = metadata.counter++;
-              let newLikes = metadata.likes++;
-            const newMetadata = {
-              counter: newCounter,
-              likes: newLikes
-            }
-            firebase.storage().ref('elbuenodeChuck.jpg').updateMetadata(newMetadata)
-            .catch(error => 'We need to talk... something happended')
-            })
+            // firebase.storage().ref('elbuenodeChuck.jpg').getMetadata().then(metadata => {
+            //   let newCounter = metadata.counter++;
+            //   let newLikes = metadata.likes++;
+            // const newMetadata = {
+            //   counter: newCounter,
+            //   likes: newLikes
+            // }
+            // firebase.storage().ref('elbuenodeChuck.jpg').updateMetadata(newMetadata)
+            // .catch(error => 'We need to talk... something happended')
+            // })
+            firebase.storage().ref('mr-t.png').getDownloadURL().then(url=> this.setState({pic: url}))
+            firebase.storage().ref('hannibal.jpg').getDownloadURL().then(url=> this.setState({pic: url}))
+            firebase.storage().ref('Murdock.jpg').getDownloadURL().then(url=> this.setState({pic: url}))
+            firebase.storage().ref('phoenix.jpg').getDownloadURL().then(url=> this.setState({pic: url}))
           }}
 
           >
